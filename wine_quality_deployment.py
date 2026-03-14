@@ -14,7 +14,7 @@ import pandas as pd
 import joblib
 
 # Load trained model
-model = joblib.load("wine_quality_prediction (1).pkl")
+model = joblib.load("wine_quality_prediction.pkl")
 
 # Title
 st.title("Wine Quality Prediction System")
