@@ -2,17 +2,13 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load trained model
+# Load model
 model = joblib.load("wine_quality_prediction.pkl")
 
-st.set_page_config(page_title="Wine Quality Prediction", page_icon="🍷")
-
 st.title("🍷 Wine Quality Prediction System")
-st.write("Enter the chemical properties of the wine to predict its quality.")
+st.write("Enter wine chemical properties")
 
-st.subheader("Wine Chemical Properties")
-
-# Input fields
+# Inputs
 fixed_acidity = st.number_input("Fixed Acidity", min_value=0.0, value=7.0)
 volatile_acidity = st.number_input("Volatile Acidity", min_value=0.0, value=0.5)
 citric_acid = st.number_input("Citric Acid", min_value=0.0, value=0.3)
@@ -25,7 +21,10 @@ pH = st.number_input("pH", min_value=0.0, value=3.3)
 sulphates = st.number_input("Sulphates", min_value=0.0, value=0.6)
 alcohol = st.number_input("Alcohol", min_value=0.0, value=10.0)
 
-# Create dataframe (must match training columns exactly)
+# Optional (only UI, not used in model)
+wine_type = st.selectbox("Wine Type", ["red", "white"])
+
+# Create dataframe EXACTLY like training features
 input_data = pd.DataFrame([[ 
     fixed_acidity,
     volatile_acidity,
@@ -52,12 +51,11 @@ input_data = pd.DataFrame([[
     "alcohol"
 ])
 
+# Show input
 st.write("### Input Data")
 st.dataframe(input_data)
 
 # Prediction
-if st.button("Predict Wine Quality 🍷"):
-
+if st.button("Predict Wine Quality"):
     prediction = model.predict(input_data)
-
-    st.success(f"Predicted Wine Quality Score: {prediction[0]}")
+    st.success(f"Predicted Wine Quality: {prediction[0]}")
