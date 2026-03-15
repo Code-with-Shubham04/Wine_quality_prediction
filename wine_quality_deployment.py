@@ -2,10 +2,10 @@ import streamlit as st
 import numpy as np
 import joblib
 
-# Load trained model
+# Load model
 model = joblib.load("wine_quality_prediction.pkl")
 
-st.title("🍷 Wine Quality Prediction System")
+st.title("🍷 Wine Prediction System")
 
 st.write("Enter the chemical properties of wine")
 
@@ -25,11 +25,11 @@ alcohol = st.number_input("Alcohol", 0.0)
 # Wine type
 wine_type = st.selectbox("Wine Type", ["Red", "White"])
 
-# Encode type
+# Encode wine type
 type_encoded = 0 if wine_type == "Red" else 1
 
-# Prediction
-if st.button("Predict Wine Quality"):
+# Prediction button
+if st.button("Predict Wine"):
 
     input_data = np.array([[ 
         fixed_acidity,
@@ -48,11 +48,4 @@ if st.button("Predict Wine Quality"):
 
     prediction = model.predict(input_data)
 
-    st.success(f"Predicted Wine Quality: {prediction[0]}")
-
-    if prediction[0] >= 7:
-        st.success("🍷 Good Quality Wine")
-    elif prediction[0] >= 5:
-        st.warning("🍷 Average Quality Wine")
-    else:
-        st.error("🍷 Low Quality Wine")
+    st.success(f"🍷 Predicted Wine Type: {prediction[0]}")
