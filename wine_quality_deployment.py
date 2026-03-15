@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load model
+# Load trained model
 model = joblib.load("wine_quality_prediction.pkl")
 
 st.title("🍷 Wine Quality Prediction System")
 
-st.write("Enter the chemical properties of wine")
+st.write("Enter wine chemical properties to predict quality")
 
 # Inputs
 fixed_acidity = st.number_input("Fixed Acidity", min_value=0.0)
@@ -22,7 +22,16 @@ pH = st.number_input("pH", min_value=0.0)
 sulphates = st.number_input("Sulphates", min_value=0.0)
 alcohol = st.number_input("Alcohol", min_value=0.0)
 
-# Create dataframe (same features used during training)
+# Wine type
+wine_type = st.selectbox("Wine Type", ["Red", "White"])
+
+# Encode type
+if wine_type == "Red":
+    type_encoded = 0
+else:
+    type_encoded = 1
+
+# Create dataframe with SAME columns as training
 input_data = pd.DataFrame([[ 
     fixed_acidity,
     volatile_acidity,
@@ -34,7 +43,8 @@ input_data = pd.DataFrame([[
     density,
     pH,
     sulphates,
-    alcohol
+    alcohol,
+    type_encoded
 ]], columns=[
     "fixed acidity",
     "volatile acidity",
@@ -46,12 +56,13 @@ input_data = pd.DataFrame([[
     "density",
     "pH",
     "sulphates",
-    "alcohol"
+    "alcohol",
+    "type"
 ])
 
 # Prediction
 if st.button("Predict Wine Quality"):
-    
+
     prediction = model.predict(input_data)
 
     st.success(f"Predicted Wine Quality: {prediction[0]}")
