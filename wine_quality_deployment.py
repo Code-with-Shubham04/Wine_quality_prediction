@@ -5,11 +5,9 @@ import joblib
 # Load model
 model = joblib.load("wine_quality_prediction.pkl")
 
-st.title("🍷 Wine Prediction System")
-
+st.title("🍷 Wine Type Prediction System")
 st.write("Enter the chemical properties of wine")
 
-# Inputs
 fixed_acidity = st.number_input("Fixed Acidity", 0.0)
 volatile_acidity = st.number_input("Volatile Acidity", 0.0)
 citric_acid = st.number_input("Citric Acid", 0.0)
@@ -22,14 +20,7 @@ pH = st.number_input("pH", 0.0)
 sulphates = st.number_input("Sulphates", 0.0)
 alcohol = st.number_input("Alcohol", 0.0)
 
-# Wine type
-wine_type = st.selectbox("Wine Type", ["Red", "White"])
-
-# Encode wine type
-type_encoded = 0 if wine_type == "Red" else 1
-
-# Prediction button
-if st.button("Predict Wine"):
+if st.button("Predict Wine Type"):
 
     input_data = np.array([[ 
         fixed_acidity,
@@ -42,8 +33,7 @@ if st.button("Predict Wine"):
         density,
         pH,
         sulphates,
-        alcohol,
-        type_encoded
+        alcohol
     ]])
 
     prediction = model.predict(input_data)
