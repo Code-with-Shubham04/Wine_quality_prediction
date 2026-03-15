@@ -22,11 +22,8 @@ pH = st.number_input("pH", 0.0)
 sulphates = st.number_input("Sulphates", 0.0)
 alcohol = st.number_input("Alcohol", 0.0)
 
-# Wine type
-wine_type = st.selectbox("Wine Type", ["Red", "White"])
-
-# Encode wine type
-type_encoded = 0 if wine_type == "Red" else 1
+# Hidden wine type (fixed value)
+type_encoded = 0   # 0 = Red , 1 = White
 
 # Prediction button
 if st.button("Predict Wine"):
