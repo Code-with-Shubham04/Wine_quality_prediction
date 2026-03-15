@@ -5,8 +5,9 @@ import joblib
 # Load trained model
 model = joblib.load("wine_quality_prediction.pkl")
 
+# Title
 st.title("🍷 Wine Quality Prediction System")
-st.write("Enter wine chemical properties")
+st.write("Enter the chemical properties of wine to predict its quality.")
 
 # Inputs
 fixed_acidity = st.number_input("Fixed Acidity", min_value=0.0)
@@ -22,11 +23,16 @@ sulphates = st.number_input("Sulphates", min_value=0.0)
 alcohol = st.number_input("Alcohol", min_value=0.0)
 
 # Wine type
-wine_type = st.selectbox("Wine Type", ["red", "white"])
-type_encoded = 0 if wine_type == "red" else 1
+wine_type = st.selectbox("Wine Type", ["Red", "White"])
 
-# Create dataframe (USE UNDERSCORES)
-df = pd.DataFrame([[ 
+# Encoding wine type
+if wine_type == "Red":
+    type_encoded = 0
+else:
+    type_encoded = 1
+
+# Create dataframe with correct column names (same as training dataset)
+input_data = pd.DataFrame([[ 
     fixed_acidity,
     volatile_acidity,
     citric_acid,
@@ -40,13 +46,13 @@ df = pd.DataFrame([[
     alcohol,
     type_encoded
 ]], columns=[
-    "fixed_acidity",
-    "volatile_acidity",
-    "citric_acid",
-    "residual_sugar",
+    "fixed acidity",
+    "volatile acidity",
+    "citric acid",
+    "residual sugar",
     "chlorides",
-    "free_sulfur_dioxide",
-    "total_sulfur_dioxide",
+    "free sulfur dioxide",
+    "total sulfur dioxide",
     "density",
     "pH",
     "sulphates",
@@ -54,7 +60,21 @@ df = pd.DataFrame([[
     "type"
 ])
 
-# Prediction
+# Prediction button
 if st.button("Predict Wine Quality"):
-    prediction = model.predict(df)
-    st.success(f"Predicted Wine Quality: {prediction[0]}")
+
+    try:
+        prediction = model.predict(input_data)
+
+        st.success(f"Predicted Wine Quality: {prediction[0]}")
+
+        if prediction[0] >= 7:
+            st.success("🍷 Good Quality Wine")
+        elif prediction[0] >= 5:
+            st.warning("🍷 Average Quality Wine")
+        else:
+            st.error("🍷 Low Quality Wine")
+
+    except Exception as e:
+        st.error("Error during prediction")
+        st.write(e)
