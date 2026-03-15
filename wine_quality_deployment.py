@@ -2,12 +2,12 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# Load trained model
+# Load model
 model = joblib.load("wine_quality_prediction.pkl")
 
-# Title
 st.title("🍷 Wine Quality Prediction System")
-st.write("Enter the chemical properties of wine to predict its quality.")
+
+st.write("Enter the chemical properties of wine")
 
 # Inputs
 fixed_acidity = st.number_input("Fixed Acidity", min_value=0.0)
@@ -22,16 +22,7 @@ pH = st.number_input("pH", min_value=0.0)
 sulphates = st.number_input("Sulphates", min_value=0.0)
 alcohol = st.number_input("Alcohol", min_value=0.0)
 
-# Wine type
-wine_type = st.selectbox("Wine Type", ["Red", "White"])
-
-# Encoding wine type
-if wine_type == "Red":
-    type_encoded = 0
-else:
-    type_encoded = 1
-
-# Create dataframe with correct column names (same as training dataset)
+# Create dataframe (same features used during training)
 input_data = pd.DataFrame([[ 
     fixed_acidity,
     volatile_acidity,
@@ -43,8 +34,7 @@ input_data = pd.DataFrame([[
     density,
     pH,
     sulphates,
-    alcohol,
-    type_encoded
+    alcohol
 ]], columns=[
     "fixed acidity",
     "volatile acidity",
@@ -56,25 +46,19 @@ input_data = pd.DataFrame([[
     "density",
     "pH",
     "sulphates",
-    "alcohol",
-    "type"
+    "alcohol"
 ])
 
-# Prediction button
+# Prediction
 if st.button("Predict Wine Quality"):
+    
+    prediction = model.predict(input_data)
 
-    try:
-        prediction = model.predict(input_data)
+    st.success(f"Predicted Wine Quality: {prediction[0]}")
 
-        st.success(f"Predicted Wine Quality: {prediction[0]}")
-
-        if prediction[0] >= 7:
-            st.success("🍷 Good Quality Wine")
-        elif prediction[0] >= 5:
-            st.warning("🍷 Average Quality Wine")
-        else:
-            st.error("🍷 Low Quality Wine")
-
-    except Exception as e:
-        st.error("Error during prediction")
-        st.write(e)
+    if prediction[0] >= 7:
+        st.success("🍷 Good Quality Wine")
+    elif prediction[0] >= 5:
+        st.warning("🍷 Average Quality Wine")
+    else:
+        st.error("🍷 Low Quality Wine")
